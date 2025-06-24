@@ -17,3 +17,17 @@ body {
   .bg-white    { background: var(--color-white); }
   .bg-gray     { background: var(--color-gray); }
   .bg-yellow   { background: var(--color-yellow); }
+
+  nav ul {
+    display: flex;
+    list-style: none;
+    
+  }
+
+  nav li{
+    margin-right: 20px;
+  }
+
+  nav li:last-child{
+    margin-right: 0;
+  }
