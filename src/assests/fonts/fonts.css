@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Noto Sans SC';
+    src: url('../fonts/NotoSansSC-VariableFont_wght.ttf') format('truetype');
+    font-weight: 100 900; /* 支持100到900的所有字重 */
+    font-style: normal italic;
+  }
+
+  @font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Italic-VariableFont_wdth\,wght.ttf') format('truetype');
+    font-weight: 100 900; /* 支持100到900的所有字重 */
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-VariableFont_wdth\,wght.ttf') format('truetype');
+    font-weight: 100 900; /* 支持100到900的所有字重 */
+    font-style: normal;
+  }
