@@ -1,5 +1,6 @@
 <!--
-完成项目1：主界面的搭建和备案号的成立。
+第一阶段：Markdown文件浏览与渲染
+功能包括：文件上传、列表显示、文章阅读、导航
 -->
 
 <!DOCTYPE html>
@@ -7,44 +8,175 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>岁月笔记本</title>
+        <title>岁月笔记本 - Markdown博客</title>
         <link rel="stylesheet" href="assets/fonts/fonts.css">
         <link rel="stylesheet" href="components/styles.css">
         <link rel="preload" href="assets/fonts/NotoSansSC-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
-        <link rel="preload" href="assets/fonts/Roboto-Italic-VariableFont_wdth\,wght.ttf" as="font" type="font/ttf" crossorigin>
-        <link rel="preload" href="assets/fonts/Roboto-VariableFont_wdth\,wght.ttf" as="font" type="font/ttf" crossorigin>
+        <link rel="preload" href="assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf" as="font" type="font/ttf" crossorigin>
+        <link rel="preload" href="assets/fonts/Roboto-VariableFont_wdth,wght.ttf" as="font" type="font/ttf" crossorigin>
         <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+        <!-- Markdown解析库 -->
+        <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
     </head>
-    <header>
-        <!-- <h1 class="text-yellow">Markdown文件浏览与渲染</h1> -->
-
-    </header>
     <body>
-        <div>
-            <nav>
-                <ul>
-                    <li><a href="#">首页</a></li>
-                    <li><a href="#">关于</a></li>
-                    <li><a href="#">联系</a></li>
-                    <li><a href="#">登录</a></li>
-                </ul>
+        <!-- 顶部导航栏 -->
+        <header class="sticky-header">
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="logo">
+                        <h1>岁月笔记本</h1>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#" class="nav-link active" data-view="home">首页</a></li>
+                        <li><a href="#" class="nav-link" data-view="articles">文章</a></li>
+                        <li><a href="#" class="nav-link" data-view="upload">写作</a></li>
+                        <li><a href="#" class="nav-link" data-view="about">关于</a></li>
+                    </ul>
+                </div>
             </nav>
-        </div>
-        <!-- 预留10个项目区域 -->
-        <main>
-            <section id="project-1" class="project-section">项目1区域（占位）</section>
-            <section id="project-2" class="project-section">项目2区域（占位）</section>
-            <section id="project-3" class="project-section">项目3区域（占位）</section>
-            <section id="project-4" class="project-section">项目4区域（占位）</section>
-            <section id="project-5" class="project-section">项目5区域（占位）</section>
-            <section id="project-6" class="project-section">项目6区域（占位）</section>
-            <section id="project-7" class="project-section">项目7区域（占位）</section>
-            <section id="project-8" class="project-section">项目8区域（占位）</section>
-            <section id="project-9" class="project-section">项目9区域（占位）</section>
-            <section id="project-10" class="project-section">项目10区域（占位）</section>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 首页视图 -->
+            <div id="home-view" class="view active">
+                <section class="hero-section">
+                    <h2>欢迎来到岁月笔记本</h2>
+                    <p>一个简洁优雅的Markdown博客平台，记录生活中的点点滴滴</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="showView('upload')">开始写作</button>
+                        <button class="btn btn-secondary" onclick="showView('articles')">浏览文章</button>
+                    </div>
+                </section>
+                
+                <!-- 最新文章预览 -->
+                <section class="recent-articles">
+                    <h3>最新文章</h3>
+                    <div id="recent-articles-list" class="articles-grid">
+                        <div class="empty-state">
+                            <p>还没有文章，<a href="#" onclick="showView('upload')">开始写作</a>吧！</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 文章列表视图 -->
+            <div id="articles-view" class="view">
+                <section class="articles-section">
+                    <div class="section-header">
+                        <h2>文章列表</h2>
+                        <div class="article-controls">
+                            <input type="text" id="search-input" placeholder="搜索文章..." class="search-input">
+                            <select id="filter-select" class="filter-select">
+                                <option value="">全部文章</option>
+                                <option value="recent">最新发布</option>
+                                <option value="oldest">最早发布</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="articles-list" class="articles-list">
+                        <div class="empty-state">
+                            <p>还没有文章，<a href="#" onclick="showView('upload')">上传一些Markdown文件</a>开始吧！</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 分页控件 -->
+                    <div id="pagination" class="pagination" style="display: none;">
+                        <button id="prev-page" class="btn btn-secondary">上一页</button>
+                        <span id="page-info" class="page-info">第 1 页，共 1 页</span>
+                        <button id="next-page" class="btn btn-secondary">下一页</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 文章上传视图 -->
+            <div id="upload-view" class="view">
+                <section class="upload-section">
+                    <h2>上传Markdown文件</h2>
+                    <div class="upload-area">
+                        <div class="file-upload" id="file-upload">
+                            <div class="upload-icon">📝</div>
+                            <p>拖拽Markdown文件到这里，或者<button class="upload-trigger">点击选择文件</button></p>
+                            <input type="file" id="file-input" multiple accept=".md,.markdown" style="display: none;">
+                        </div>
+                        <div class="upload-progress" id="upload-progress" style="display: none;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <p id="progress-text">正在处理文件...</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 文章阅读视图 -->
+            <div id="reader-view" class="view">
+                <section class="reader-section">
+                    <div class="reader-header">
+                        <button class="btn btn-secondary back-btn" onclick="showView('articles')">← 返回文章列表</button>
+                        <div class="view-toggle">
+                            <button id="rendered-toggle" class="btn btn-primary active">渲染视图</button>
+                            <button id="source-toggle" class="btn btn-secondary">源码视图</button>
+                        </div>
+                    </div>
+                    
+                    <article class="article-content">
+                        <header class="article-header">
+                            <h1 id="article-title">文章标题</h1>
+                            <div class="article-meta">
+                                <span id="article-date">发布时间</span>
+                                <span id="article-size">文件大小</span>
+                            </div>
+                        </header>
+                        
+                        <div class="article-body">
+                            <!-- 渲染后的HTML内容 -->
+                            <div id="rendered-content" class="rendered-content"></div>
+                            
+                            <!-- 原始Markdown内容 -->
+                            <pre id="source-content" class="source-content" style="display: none;"></pre>
+                        </div>
+                    </article>
+                </section>
+            </div>
+
+            <!-- 关于页面 -->
+            <div id="about-view" class="view">
+                <section class="about-section">
+                    <h2>关于岁月笔记本</h2>
+                    <div class="about-content">
+                        <p>岁月笔记本是一个简洁优雅的前端博客系统，专为Markdown爱好者设计。</p>
+                        
+                        <h3>主要功能</h3>
+                        <ul>
+                            <li>支持Markdown文件上传和管理</li>
+                            <li>实时渲染Markdown内容</li>
+                            <li>源码和渲染视图切换</li>
+                            <li>文章搜索和筛选</li>
+                            <li>响应式设计，支持多端访问</li>
+                        </ul>
+                        
+                        <h3>技术栈</h3>
+                        <ul>
+                            <li>HTML5 + CSS3 + JavaScript</li>
+                            <li>Marked.js (Markdown解析)</li>
+                            <li>localStorage (本地存储)</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
         </main>
+
+        <!-- 底部信息 -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p><a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025433295号-1</a></p>
+                <p>© 2025 岁月笔记本. 用心记录，用爱分享。</p>
+            </div>
+        </footer>
+
+        <!-- JavaScript -->
+        <script src="components/default.js"></script>
     </body>
-    <footer>
-        <p><a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025433295号-1</a></p>
-    </footer>
 </html>
